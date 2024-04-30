@@ -1,18 +1,24 @@
-import React from 'react'
-import{BrowserRouter as Router, Routes, Route} from "react-router-dom"
-import Home from "./routes/Home"
-import ProductDetailPage from "./routes/ProductDetailPage"
-import UpdatePage from "./routes/UpdatePage"
-const App = () => {
-    return <div>
+import React from "react";
+import{BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import Home from "./routes/Home";
+import UpdatePage from "./routes/UpdatePage";
+import ProductDetailPAge from './routes/ProductDetailPAge';
+import { ProductsContextProvider } from "./context/ProductsContext";
+
+function App (){
+    return (
+    <ProductsContextProvider >
+         <div className=""  style={{backgroundColor: 'mediumseagreen'}}>
        <Router>
             <Routes>
-            <Route exact path="/" component={Home}/>
-            <Route exact path="/products/:id/update" component={UpdatePage}/>
-            <Route exact path="/products/:id" component={ProductDetailPage}/>
+            <Route exact path="/" element={<Home />}/>
+            <Route exact path="/products/:id/update" element={<UpdatePage />}/>
+            <Route exact path="/products/:id" element={<ProductDetailPAge />}/>
             </Routes>
        </Router> 
     </div>
+    </ProductsContextProvider>
+    )
 };
 
 export default App;
