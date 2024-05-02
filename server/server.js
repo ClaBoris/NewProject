@@ -52,6 +52,7 @@ app.get("/api/v1/products/:id", async (req, res) => {
 //Create a Product
 app.post("/api/v1/products", async (req, res) => {
     console.log(req.body);
+    
     try {
         const results = await db.query("INSERT INTO products (name, price) values ($1, $2) returning *", [req.body.name, req.body.price]);
         console.log(results);
@@ -59,7 +60,7 @@ app.post("/api/v1/products", async (req, res) => {
             status: "success",
             data: {
                 product: results.rows[0],
-            }
+            },
         });
     } catch (err) {
         console.log(err);

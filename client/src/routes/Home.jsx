@@ -1,7 +1,7 @@
 import React from 'react'
 import Header from '../components/Header';
 import App from '../App';
-import AddProduct from '../components/AddProducts';
+import AddProduct from '../components/AddProduct';
 import ProductsList from '../components/ProductsList';
 
 const Home = () => {
