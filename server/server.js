@@ -34,7 +34,7 @@ app.get("/api/v1/products/:id", async (req, res) => {
     console.log(req.params.id);
 
     try {
-        const results = await db.query("select * from products where id = $1", [req.params.id]);
+        const results = await db.query("SELECT * FROM products WHERE id = $1", [req.params.id]);
 
 
         res.status(200).json({

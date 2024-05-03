@@ -1,17 +1,16 @@
 import React from 'react'
 import Header from '../components/Header';
-import App from '../App';
 import AddProduct from '../components/AddProduct';
 import ProductsList from '../components/ProductsList';
 
 const Home = () => {
     return (
-    <div style={{backgroundColor: 'mediumseagreen'}}>
+    <div>
         <Header />
         <AddProduct />
         <ProductsList />
     </div>
-    )
-}
+    );
+};
 
 export default Home;

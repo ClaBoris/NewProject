@@ -8,7 +8,7 @@ import { ProductsContextProvider } from "./context/ProductsContext";
 function App (){
     return (
     <ProductsContextProvider >
-         <div className=""  style={{backgroundColor: 'mediumseagreen'}}>
+         <div className="">
        <Router>
             <Routes>
             <Route exact path="/" element={<Home />}/>
