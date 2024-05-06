@@ -34,14 +34,19 @@ app.get("/api/v1/products/:id", async (req, res) => {
     console.log(req.params.id);
 
     try {
-        const results = await db.query("SELECT * FROM products WHERE id = $1", [req.params.id]);
+        const product = await db.query("SELECT * FROM products WHERE id = $1", [req.params.id]);
+
+
+        const reviews = await db.query("SELECT * FROM reviews WHERE product_id = $1", [req.params.id]);
+
 
 
         res.status(200).json({
             status: "success",
             data: {
-                product: results.rows[0],
-            }
+                product: product.rows[0],
+                reviews: reviews.rows
+            },
         });
     } catch (err) {
         console.log(err);

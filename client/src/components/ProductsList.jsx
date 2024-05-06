@@ -20,7 +20,8 @@
           }, []); 
            
 
-          const handleDelete = async (id) => {
+          const handleDelete = async (e, id) => {
+            e.stopPropagation();
             try{
              const response = await ProductFinder.delete(`/${id}`); //con questi apici la delite async funziona
              setProducts(products.filter((product) => {
@@ -31,13 +32,18 @@
             }
           };
 
-          const handleUpdate = async (id) => {
+          const handleUpdate = async (e, id) => {
+             e.stopPropagation();
              navigate(`/products/${id}/update`);
+          };
+
+          const handleProductSelect = async (id) => {
+            navigate(`/products/${id}`);
           };
 
           return (
             <div className="list-group">
-            <table className="table table-bordered table-secondary">
+            <table className="table table-hover table-secondary">
               <thead>
                 <tr className="bg-primary">
                   <th scope="col">Name</th>
@@ -52,7 +58,7 @@
                   products.map((product) => {
                     return (
                       <tr
-                        
+                        onClick={() => handleProductSelect(product.id)} 
                         key={product.id}
                       >
                         <td>{product.name}</td>
@@ -60,7 +66,7 @@
                         <td>Rating</td>
                         <td>
                           <button
-                            onClick={() => handleUpdate(product.id)}
+                            onClick={(e) => handleUpdate(e, product.id)}
                             className="btn btn-warning"
                           >
                             Update
@@ -68,7 +74,7 @@
                         </td>
                         <td>
                           <button
-                            onClick={() => handleDelete(product.id)}
+                            onClick={(e) => handleDelete(e, product.id)}
                             className="btn btn-danger"
                           >
                             Delete
