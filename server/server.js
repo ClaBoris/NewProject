@@ -2,6 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const db = require("./db");
+const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 
 const morgan = require("morgan");
 
@@ -10,6 +12,9 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+
+
 
 //GET ALL PRODUCTS
 app.get("/api/v1/products", async (req, res) => {
@@ -122,6 +127,9 @@ app.post("/api/v1/products/:id/addReview", async (req,res) => {
         console.log(err);
     }
 });
+
+
+
 
 
 const port = process.env.PORT || 3001;

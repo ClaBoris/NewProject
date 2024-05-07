@@ -35,10 +35,51 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>React App</title>
+    <script>
+      // Carica FingerprintJS
+    const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4')
+      .then(FingerprintJS => FingerprintJS.load())
+
+    // Ottieni l'agente utente
+    const userAgent = navigator.userAgent;
+
+    // Ottieni le dimensioni dello schermo
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+
+    // Ottieni la profondità del colore dello schermo
+    const colorDepth = window.screen.colorDepth;
+
+    // Ottieni la lingua preferita del browser
+    const language = navigator.language;
+
+    // Ottieni i nomi dei plugin del browser
+    const plugins = [];
+    for (let i = 0; i < navigator.plugins.length; i++) {
+      plugins.push(navigator.plugins[i].name);
+    }
+
+    // Ottieni il fingerprint e le altre informazioni quando sono disponibili
+    fpPromise
+      .then(fp => fp.get())
+      .then(result => {
+        // This is the visitor identifier:
+        const visitorId = result.visitorId;
+        console.log("Fingerprint:", visitorId);
+        console.log("User Agent:", userAgent);
+        console.log("Screen Width:", screenWidth, "Screen Height:", screenHeight);
+        console.log("Color Depth:", colorDepth);
+        console.log("Language:", language);
+        console.log("Plugins:", plugins);
+      })
+      .catch(error => console.error("Error getting fingerprint:", error));
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root" ></div>
+    
+    <!--script src="./client.js"></script>-->
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

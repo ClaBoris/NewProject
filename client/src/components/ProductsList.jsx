@@ -3,6 +3,8 @@
         import { ProductsContext } from '../context/ProductsContext'
         import { useNavigate } from 'react-router-dom';
 
+        
+
         const ProductsList = (props) => {
           const { products, setProducts } = useContext(ProductsContext);
           let navigate= useNavigate()
@@ -18,7 +20,48 @@
             fetchData();
             console.log(products);
           }, []); 
+
+
+
+
+         /* const trackEvent = (eventName, eventData) => {
+            //creo l'oggetto che rappresenza l'evento:
+            const eventObject = {
+              name: eventName,
+              data: eventData
+            };
+
+            //invio l'evento al backend
+            fetch(`/api/v1/products/trackEventDelete`, {
+              method: "POST",
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(eventObject)
+            })
+            .then(response => {
+              if (response.ok) {
+                console.log('Evento tracciato con successo');
+              } else {
+                console.error('Errore durante il tracciamento dell\'evento:', response.status);
+              }
+            })
+            .catch(error => {
+              console.error('Errore durante il tracciamento dell\'evento:', error);
+            });
+            
+
+
+            // Logica per tracciare l'evento
+            console.log(`Evento tracciato: ${eventName}`, eventData);
+            // Qui dovresti inserire la logica per inviare l'evento al tuo backend
+          }
+          useEffect(() => {
+            fetchData(); // Esegui il fetch dei prodotti al montaggio del componente
+          }, []);*/
            
+
+
 
           const handleDelete = async (e, id) => {
             e.stopPropagation();
@@ -27,6 +70,8 @@
              setProducts(products.filter((product) => {
               return product.id !== id;
              }));
+              // Traccia l'evento di eliminazione del prodotto
+             // trackEvent('prodotto_eliminato', { product_id: id }); 
             }catch(err){
               console.log(err);
             }
