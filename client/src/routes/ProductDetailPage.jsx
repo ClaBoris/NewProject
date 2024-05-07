@@ -14,7 +14,7 @@ const ProductDetailPAge = () => {
     useEffect(() => {
         const fetchData = async () => {
             try{
-                const response = await ProductFinder.get(`/${id}`);
+                const response = await ProductFinder.get(`/${id}/`);
                 
                 setSelectedProduct(response.data.data);
             }catch(err){
@@ -26,14 +26,21 @@ const ProductDetailPAge = () => {
     }, []);
 
 
-    return <div>{selectedProduct && (
+    return( 
+    <div>
+        {selectedProduct && (
         <>
+          <h1 className='text-center display-1'>
+            {selectedProduct.product.name}
+          </h1>
             <div className="mt-3">
                 <Reviews reviews={selectedProduct.reviews}/>
             </div>
                 <AddReview />
         </> 
-    )}</div>
+    )}
+    </div>
+    );
 };
 
 export default ProductDetailPAge;

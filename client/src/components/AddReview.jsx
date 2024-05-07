@@ -1,10 +1,31 @@
 import React, { useState } from "react";
+import ProductFinder from "../apis/ProductFinder";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
     const AddReview = () => {
+        const {id} = useParams();
+        const location = useLocation();
+        console.log(location);
+        let navigate = useNavigate();
+        console.log(id);
+
         const [name,setName] = useState("");
         const [reviewText, setReviewText] = useState("");
         const [rating, setRating] = useState("Rating");
 
+
+
+        const handleSubmitReview = async (e) => {
+            e.preventDefault();
+            try{
+                const response = await ProductFinder.post(`/${id}/addReview`, {
+                    name,
+                    review: reviewText,
+                    rating,
+                });
+                navigate(`/`);
+            }catch(err){}
+        };
 
         return (
            <div className="mb-2">
@@ -47,7 +68,7 @@ import React, { useState } from "react";
                            className="form-control"
                         ></textarea>
                     </div>
-                    <button className="btn btn-success">Submit</button>
+                    <button type="submit" onClick={handleSubmitReview} className="btn btn-success">Submit</button>
                 </form>
            </div>
         );

@@ -18,23 +18,11 @@ import StarRating from "./StarRating";
                                 </span>
                             </div>
                             <div className="card-body">
-                                <p className="card-text">Beautiful product.</p>
+                                <p className="card-text">{review.review}</p>
                             </div>
                         </div>
                     );
                 })}
-               {/* <div 
-                className="card text-white bg-success mb-3 mb-4" 
-                style={{maxWidth: "30%"}}
-                > 
-                    <div className="card-header d-flex justify-content-between">
-                        <span>John</span>
-                        <span><StarRating rating={3}/></span>
-                    </div>
-                    <div className="card-body">
-                        <p className="card-text">Beautiful product.</p>
-                    </div>
-             </div>*/}
             </div>
         );
     };

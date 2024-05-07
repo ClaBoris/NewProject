@@ -4,10 +4,10 @@ export const ProductsContext = createContext();
 
 export const ProductsContextProvider = (props) => {
     const [products, setProducts] = useState([]); //chiamata iniziale con array vuoto
-    const [selectedProduct, setSelectedProduct] = useState([]);
+    const [selectedProduct, setSelectedProduct] = useState(null);
 
-    const addProducts = (newProduct) => {
-        setProducts([...products, newProduct])
+    const addProducts = (product) => {
+        setProducts([...products, product])
     };
 
     return (
