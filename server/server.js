@@ -5,6 +5,10 @@ const db = require("./db");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 
+const bodyParser = require('body-parser');
+
+const { Pool } = require('pg');
+
 const morgan = require("morgan");
 
 const app = express();
@@ -13,7 +17,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use(bodyParser.json());
 
+// Configurazione del pool di connessione al database PostgreSQL
+const pool = new Pool({
+    user: 'username',
+    host: 'localhost',
+    database: 'database',
+    password: 'password',
+    port: 5432,
+});
 
 
 //GET ALL PRODUCTS
@@ -129,7 +142,60 @@ app.post("/api/v1/products/:id/addReview", async (req,res) => {
 });
 
 
+/***********************************/
+// Endpoint per gestire la richiesta di invio degli eventi
+app.post('/api/v1/events', (req, res) => {
+    // Ricevi i dati degli eventi dal corpo della richiesta
+    const events = req.body.events;
 
+    // Stampa i dati degli eventi sulla console del server
+    console.log(" Successfully Achieved Events:", events);
+
+    // Invia una risposta al client per confermare la ricezione dei dati
+    res.json({ message: " Successfully Achieved Events!" });
+});
+/***********************************/
+// Endpoint per la creazione di una nuova sessione
+app.post('/api/v1/sessions', async (req, res) => {
+    try {
+        const session = await db.query("INSERT INTO sessions (fingerprint, user_Agent, screen_width, screen_height, color_depth, language, plugins) values ($1, $2, $3, $4, $5, $6, $7)",
+        [req.body.fingerprint, req.body.userAgent, req.body.screenWidth, req.body.screenHeight, req.body.colorDepth, req.body.language, req.body.plugin]);
+  
+      res.status(201).json(
+        { 
+            success: true, 
+            data:{
+                sessione: session.rows[0]
+            } 
+        });
+    
+    } catch (error) {
+      console.error('Error creating session:', error);
+      res.status(500).json({ success: false, error: 'Failed to create session' });
+    }
+  });
+/***********************************/
+// Delete reviews associated with a product
+app.delete("/api/v1/products/:id/deleteReviews", async (req, res) => {
+    const productId = req.params.id;
+
+    try {
+        // Delete reviews associated with the specified product ID
+        const results = await db.query("DELETE FROM reviews WHERE product_id = $1", [productId]);
+        
+        res.status(204).json({
+            status: "success",
+            message: `Reviews associated with product ${productId} have been deleted.`,
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            status: "error",
+            message: "An error occurred while deleting reviews.",
+        });
+    }
+});
+/***********************************/
 
 
 const port = process.env.PORT || 3001;

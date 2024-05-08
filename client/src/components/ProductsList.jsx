@@ -1,11 +1,9 @@
-        import React, {useContext, useEffect} from 'react'
+        import React, {useContext,useState, useEffect} from 'react'
         import ProductFinder from '../apis/ProductFinder'
         import { ProductsContext } from '../context/ProductsContext'
         import { useNavigate } from 'react-router-dom';
 
-        
-
-        const ProductsList = (props) => {
+          const ProductsList = (props) => {
           const { products, setProducts } = useContext(ProductsContext);
           let navigate= useNavigate()
           const fetchData = async () => {
@@ -22,64 +20,88 @@
           }, []); 
 
 
+          
+/*******************************************************/
+      //creo lo stato per gli eventi: 
+    const[events,setEvents] = useState([]);
 
+    //funzione per aggiungere un evento:
+    const addEvent = (event) => {
+        setEvents(prevEvents => [...prevEvents, event]);
+    };
 
-         /* const trackEvent = (eventName, eventData) => {
-            //creo l'oggetto che rappresenza l'evento:
-            const eventObject = {
-              name: eventName,
-              data: eventData
-            };
+    //Effetto per inviare gli eventi al server quando cambiano
+    useEffect(() => {
+        if (events.length > 0) {
+            sendEventsToServer(events);
+        }
+    }, [events]);
 
-            //invio l'evento al backend
-            fetch(`/api/v1/products/trackEventDelete`, {
-              method: "POST",
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(eventObject)
+    const sendEventsToServer = (events) => {
+        try {
+            // Stampiamo gli eventi nella console del browser
+            console.log("Events sent to server:", events);
+
+            // Inviamo gli eventi al server
+            fetch("http://localhost:3001/api/v1/events", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ events })
             })
             .then(response => {
-              if (response.ok) {
-                console.log('Evento tracciato con successo');
-              } else {
-                console.error('Errore durante il tracciamento dell\'evento:', response.status);
-              }
+                if (!response.ok) {
+                    throw new Error('Failed to send events to server');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Response from server:", data);
             })
             .catch(error => {
-              console.error('Errore durante il tracciamento dell\'evento:', error);
+                console.error("Error sending events to server:", error);
             });
-            
+        } catch (error) {
+            console.error("Error sending events to server:", error);
+        }
+    };
 
-
-            // Logica per tracciare l'evento
-            console.log(`Evento tracciato: ${eventName}`, eventData);
-            // Qui dovresti inserire la logica per inviare l'evento al tuo backend
-          }
-          useEffect(() => {
-            fetchData(); // Esegui il fetch dei prodotti al montaggio del componente
-          }, []);*/
-           
-
-
+/*******************************************************/
 
           const handleDelete = async (e, id) => {
             e.stopPropagation();
             try{
+              // Elimina tutte le recensioni associate al prodotto
+              await ProductFinder.delete(`/${id}/deleteReviews`);
+
+              // Aggiungiamo un evento per la cancellazione di un prodotto
+              sendEventsToServer([{ event: `Product deleted: ${id}` }]);
+
              const response = await ProductFinder.delete(`/${id}`); //con questi apici la delite async funziona
+             console.log("Response from delete product API:", response);
+
              setProducts(products.filter((product) => {
               return product.id !== id;
              }));
-              // Traccia l'evento di eliminazione del prodotto
-             // trackEvent('prodotto_eliminato', { product_id: id }); 
             }catch(err){
               console.log(err);
             }
           };
 
           const handleUpdate = async (e, id) => {
-             e.stopPropagation();
-             navigate(`/products/${id}/update`);
+            try{
+
+               // Aggiungiamo un evento per l'aggiornamento di un prodotto
+              sendEventsToServer([{ event: `Product updated: ${id}` }]);
+
+              e.stopPropagation();
+              navigate(`/products/${id}/update`);
+
+            }catch(err){
+              console.log(err);
+            }
+             
           };
 
           const handleProductSelect = async (id) => {
@@ -122,7 +144,7 @@
                             onClick={(e) => handleDelete(e, product.id)}
                             className="btn btn-danger"
                           >
-                            Delete
+                            Delete<i className="fa fa-trash mr-1"></i>
                           </button>
                         </td>
                       </tr>

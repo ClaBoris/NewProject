@@ -60,19 +60,45 @@
     }
 
     // Ottieni il fingerprint e le altre informazioni quando sono disponibili
-    fpPromise
-      .then(fp => fp.get())
-      .then(result => {
-        // This is the visitor identifier:
-        const visitorId = result.visitorId;
-        console.log("Fingerprint:", visitorId);
-        console.log("User Agent:", userAgent);
-        console.log("Screen Width:", screenWidth, "Screen Height:", screenHeight);
-        console.log("Color Depth:", colorDepth);
-        console.log("Language:", language);
-        console.log("Plugins:", plugins);
+  fpPromise
+    .then(fp => fp.get())
+    .then(result => {
+      // This is the visitor identifier:
+      const visitorId = result.visitorId;
+      console.log("Fingerprint:", visitorId);
+      console.log("User Agent:", userAgent);
+      console.log("Screen Width:", screenWidth, "Screen Height:", screenHeight);
+      console.log("Color Depth:", colorDepth);
+      console.log("Language:", language);
+      console.log("Plugins:", plugins);
+
+      // Invia i dati al backend
+      fetch("http://localhost:3001/api/v1/sessions", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          fingerprint: visitorId,
+          userAgent,
+          screenWidth,
+          screenHeight,
+          colorDepth,
+          language,
+          plugins
+        })
       })
-      .catch(error => console.error("Error getting fingerprint:", error));
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to create session');
+        }
+        console.log('Session created successfully');
+      })
+      .catch(error => {
+        console.error('Error creating session:', error);
+      });
+    })
+    .catch(error => console.error("Error getting fingerprint:", error));
     </script>
   </head>
   <body>
